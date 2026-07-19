@@ -100,4 +100,4 @@ The application automatically seeds the database with the following users on sta
 * **Production-Ready Code**: Features global exception handlers, standardized API responses, environment-based configurations (`application-dev.yml`), and strict TypeScript typing.
 
 ---
-*Designed & Developed with Madan C S*
+*Designed & Developed by Madan C S*
