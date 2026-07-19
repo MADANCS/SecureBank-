@@ -1,0 +1,25 @@
+# Java / Maven
+/backend/target/
+**/target/
+**/out/
+**/.mvn/
+
+# Node
+/frontend/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.*.local
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Mac/Linux
+.DS_Store

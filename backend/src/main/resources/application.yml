@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/securebank}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6380}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: ${MAX_FILE_SIZE:5MB}
+      max-request-size: ${MAX_REQUEST_SIZE:10MB}
+
+jwt:
+  secret: ${JWT_SECRET:ChangeThisSecretKeyForProdChangeThisSecretKeyForProd}
+  access:
+    expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+  refresh:
+    expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:rzp_test_qUmhUFElBiSNIs}
+  key-secret: ${RAZORPAY_KEY_SECRET:wsBV1ts8yJPld9JktATIdOiS}
+
+stripe:
+  api-key: ${STRIPE_API_KEY:sk_test_your_stripe_api_key_here}
+  endpoint-secret: ${STRIPE_ENDPOINT_SECRET:whsec_your_webhook_secret_here}
+
+app:
+  allowed-origins: ${APP_ALLOWED_ORIGINS:http://localhost:3000}
+  security:
+    admin-ip-whitelist: ${ADMIN_IP_WHITELIST:127.0.0.1,0:0:0:0:0:0:0:1}
+  kyc:
+    upload-dir: ${KYC_UPLOAD_DIR:./kyc-uploads}
+
+server:
+  port: ${SERVER_PORT:8080}

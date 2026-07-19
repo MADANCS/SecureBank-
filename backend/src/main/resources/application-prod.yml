@@ -1,0 +1,78 @@
+# ─────────────────────────────────────────────────────────
+# SecureBank – application-prod.yml
+# Production profile: PostgreSQL + Flyway + strict settings
+# Activate with: --spring.profiles.active=prod
+# All secrets must be provided via environment variables.
+# ─────────────────────────────────────────────────────────
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+    validate-on-migrate: true
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 600000
+      connection-timeout: 30000
+      pool-name: SecureBankHikari
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+
+  redis:
+    host: ${SPRING_REDIS_HOST}
+    port: ${SPRING_REDIS_PORT:6379}
+    password: ${SPRING_REDIS_PASSWORD:}
+    ssl:
+      enabled: ${SPRING_REDIS_SSL:false}
+
+server:
+  port: ${SERVER_PORT:8080}
+  tomcat:
+    max-threads: 200
+    connection-timeout: 20000
+
+jwt:
+  secret: ${JWT_SECRET}
+  access:
+    expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:900000}
+  refresh:
+    expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID}
+  key-secret: ${RAZORPAY_KEY_SECRET}
+
+stripe:
+  api-key: ${STRIPE_API_KEY}
+  endpoint-secret: ${STRIPE_ENDPOINT_SECRET}
+
+app:
+  allowed-origins: ${APP_ALLOWED_ORIGINS}
+  security:
+    admin-ip-whitelist: ${ADMIN_IP_WHITELIST:127.0.0.1,0:0:0:0:0:0:0:1}
+
+logging:
+  level:
+    root: WARN
+    com.securebank: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

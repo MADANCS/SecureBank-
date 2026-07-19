@@ -1,0 +1,41 @@
+spring:
+  flyway:
+    enabled: false
+  cache:
+    type: none
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:securebank;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
+    show-sql: ${SPRING_JPA_SHOW_SQL:false}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+server:
+  port: ${SERVER_PORT:8080}
+jwt:
+  secret: ${JWT_SECRET:ChangeThisSecretKeyForProdChangeThisSecretKeyForProd}
+  access:
+    expiration-ms: ${JWT_ACCESS_EXPIRATION_MS:28800000}
+  refresh:
+    expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:rzp_test_qUmhUFElBiSNIs}
+  key-secret: ${RAZORPAY_KEY_SECRET:wsBV1ts8yJPld9JktATIdOiS}
+stripe:
+  api-key: ${STRIPE_API_KEY:sk_test_your_stripe_api_key_here}
+  endpoint-secret: ${STRIPE_ENDPOINT_SECRET:whsec_your_webhook_secret_here}
+app:
+  allowed-origins: ${APP_ALLOWED_ORIGINS:http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004,http://localhost:3005}

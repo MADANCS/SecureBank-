@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Auto Login</title></head>
+<body>
+<script>
+  fetch('http://localhost:8080/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'testuser', password: 'Test@1234' })
+  })
+  .then(r => r.json())
+  .then(data => {
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+    localStorage.setItem('username', data.username);
+    window.location.href = '/dashboard';
+  })
+  .catch(e => document.body.textContent = 'Login failed: ' + e.message);
+</script>
+<p>Logging in...</p>
+</body>
+</html>
