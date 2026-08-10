@@ -21,6 +21,6 @@ USER appuser:appgroup
 VOLUME /tmp
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 8088
+EXPOSE 8080 8088 10000
 
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=dev", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${PORT:-8080} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-dev} -jar app.jar"]
