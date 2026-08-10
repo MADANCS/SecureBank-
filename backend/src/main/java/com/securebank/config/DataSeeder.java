@@ -36,6 +36,7 @@ public class DataSeeder implements CommandLineRunner {
             User testUser = new User();
             testUser.setUsername("testuser");
             testUser.setPassword(passwordEncoder.encode("Test@1234"));
+            testUser.setTransactionPin(passwordEncoder.encode("1234"));
             testUser.setEmail("test@securebank.com");
             testUser.setRole("USER");
             testUser.setKycStatus(KycStatus.VERIFIED);
@@ -49,6 +50,7 @@ public class DataSeeder implements CommandLineRunner {
             User recipient = new User();
             recipient.setUsername("recipient");
             recipient.setPassword(passwordEncoder.encode("Test@1234"));
+            recipient.setTransactionPin(passwordEncoder.encode("1234"));
             recipient.setEmail("recipient@securebank.com");
             recipient.setRole("USER");
             recipient.setKycStatus(KycStatus.VERIFIED);
@@ -61,6 +63,7 @@ public class DataSeeder implements CommandLineRunner {
             User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("Admin@1234"));
+            admin.setTransactionPin(passwordEncoder.encode("1234"));
             admin.setEmail("admin@securebank.com");
             admin.setRole("ADMIN");
             admin.setKycStatus(KycStatus.VERIFIED);
@@ -69,12 +72,18 @@ public class DataSeeder implements CommandLineRunner {
             
             System.out.println("Seeded initial test users and accounts successfully.");
         } else {
-            // Update testuser if they don't have accounts
+            // Ensure testuser has PIN and accounts
             User testUser = userRepository.findByUsername("testuser").orElse(null);
-            if (testUser != null && testUser.getAccounts().isEmpty()) {
-                createAccount(testUser, "SAVINGS", new BigDecimal("500000.00"));
-                createAccount(testUser, "CURRENT", new BigDecimal("150000.00"));
-                System.out.println("Seeded testuser accounts successfully.");
+            if (testUser != null) {
+                if (testUser.getTransactionPin() == null) {
+                    testUser.setTransactionPin(passwordEncoder.encode("1234"));
+                    userRepository.save(testUser);
+                }
+                if (testUser.getAccounts().isEmpty()) {
+                    createAccount(testUser, "SAVINGS", new BigDecimal("500000.00"));
+                    createAccount(testUser, "CURRENT", new BigDecimal("150000.00"));
+                }
+                System.out.println("Seeded testuser accounts and transaction PIN successfully.");
             }
         }
     }
