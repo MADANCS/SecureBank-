@@ -4,11 +4,11 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://securebank-c41z.onrender.com/api/$1"
+      "source": "/api/:path*",
+      "destination": "https://securebank-c41z.onrender.com/api/:path*"
     },
     {
-      "source": "/(.*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ]

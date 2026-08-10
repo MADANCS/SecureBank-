@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// In dev, Vite proxies /api → http://localhost:8080/api (see vite.config.ts)
-// In prod, set VITE_API_BASE_URL to your backend URL (e.g. https://api.securebank.com/api)
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+// Default to live Render backend API URL if VITE_API_BASE_URL is not set
+const DEFAULT_API_URL = 'https://securebank-c41z.onrender.com/api';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_URL;
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
