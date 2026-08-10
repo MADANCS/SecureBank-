@@ -41,7 +41,7 @@ export interface Transaction {
   toAccount: string;
   amount: number;
   type?: 'DEBIT' | 'CREDIT' | 'TRANSFER';
-  status: 'SUCCESS' | 'PENDING' | 'FAILED' | 'COMPLETED' | 'PROCESSING' | 'CANCELLED';
+  status: 'SUCCESS' | 'PENDING' | 'FAILED' | 'COMPLETED' | 'PROCESSING' | 'CANCELLED' | 'DISBURSED' | 'APPROVED' | 'REJECTED' | 'BLOCKED' | 'EMI_PAID' | string;
   description?: string;
   timestamp?: string;
   createdAt?: string;

@@ -3,10 +3,12 @@
 # 🏦 SecureBank
 **A Next-Generation Enterprise Banking Platform**
 
+[![CI/CD Pipeline](https://github.com/MADANCS/SecureBank-/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/MADANCS/SecureBank-/actions/workflows/ci-cd.yml)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 *SecureBank is a full-stack, highly secure, and feature-rich digital banking application designed to demonstrate enterprise-grade software architecture, robust security practices, and modern UI/UX design.*
 
