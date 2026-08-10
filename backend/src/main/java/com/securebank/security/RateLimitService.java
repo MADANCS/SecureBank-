@@ -18,8 +18,8 @@ public class RateLimitService {
     public void recordLoginAttempt(String username) {
         String key = "login:attempts:" + username;
         try {
-            Long attempts = (Long) redisTemplate.opsForValue().increment(key);
-            if (attempts == 1) {
+            Number attempts = (Number) redisTemplate.opsForValue().increment(key);
+            if (attempts != null && attempts.longValue() == 1) {
                 redisTemplate.expire(key, LOCKOUT_DURATION);
             }
         } catch (Exception ex) {
@@ -40,7 +40,7 @@ public class RateLimitService {
         String key = "login:attempts:" + username;
         try {
             Object attempts = redisTemplate.opsForValue().get(key);
-            return attempts != null && (Long) attempts >= MAX_LOGIN_ATTEMPTS;
+            return attempts instanceof Number n && n.longValue() >= MAX_LOGIN_ATTEMPTS;
         } catch (Exception ex) {
             return false;
         }
