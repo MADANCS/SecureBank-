@@ -4,15 +4,33 @@
 **A Next-Generation Enterprise Banking Platform**
 
 [![CI/CD Pipeline](https://github.com/MADANCS/SecureBank-/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/MADANCS/SecureBank-/actions/workflows/ci-cd.yml)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-black?style=for-the-badge&logo=vercel&logoColor=white)](https://secure-bank-mazz-git-main-madan21.vercel.app/signin)
+[![Render Deployment](https://img.shields.io/badge/Render-Backend-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://securebank-c41z.onrender.com/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![React](https://img.shields.io/badge/React-18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 *SecureBank is a full-stack, highly secure, and feature-rich digital banking application designed to demonstrate enterprise-grade software architecture, robust security practices, and modern UI/UX design.*
 
 </div>
+
+---
+
+## 🌐 Live Production Demo
+
+- **Frontend Application (Vercel)**: [https://secure-bank-mazz-git-main-madan21.vercel.app/signin](https://secure-bank-mazz-git-main-madan21.vercel.app/signin)
+- **Backend Service (Render)**: [https://securebank-c41z.onrender.com/](https://securebank-c41z.onrender.com/)
+
+> ℹ️ **Note on First Access**: Render free tier instances spin down after inactivity. The first API request may take ~30–45 seconds to perform a cold start. Subsequent requests respond instantly (<100ms).
+
+---
+
+## 🔑 Test Credentials for Live Demo
+
+| Role | Username | Password | Purpose & Capabilities |
+|------|----------|----------|------------------------|
+| **Customer** | `testuser` | `Test@1234` | View accounts, perform money transfers, deposit funds, pay EMIs, upload KYC |
+| **Admin** | `admin` | `Admin@1234` | Approve loans, verify KYC documents, manage accounts, freeze/unblock, view audit logs |
 
 ---
 
@@ -51,21 +69,19 @@ Built on a robust Java ecosystem, emphasizing scalability, maintainability, and 
 ### **Frontend (React + Vite)**
 A lightning-fast, responsive, and beautiful user interface designed for maximum user engagement.
 - **Core**: React 18, TypeScript, Vite.
-- **State & Data Fetching**: `@tanstack/react-query` for sophisticated server-state synchronization and caching, `axios` for API calls.
-- **Styling**: Tailwind CSS with custom dynamic themes, glassmorphism, and responsive design.
+- **State & Data Fetching**: `@tanstack/react-query` for server-state synchronization, `axios` for API requests.
+- **Styling**: Vanilla CSS / Tailwind CSS with custom dynamic themes, glassmorphism, and responsive design.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Local Development Setup
 
 ### Prerequisites
 - **Java 17+**
-- **Node.js 18+** & **npm/yarn**
+- **Node.js 20+** & **npm**
 - **Maven 3.8+**
 
 ### 1. Running the Backend
-Navigate to the `backend` directory and start the Spring Boot application using the `dev` profile.
-
 ```bash
 cd backend
 mvn spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.jvmArguments="-Dserver.port=8088"
@@ -73,33 +89,21 @@ mvn spring-boot:run -Dspring-boot.run.profiles=dev -Dspring-boot.run.jvmArgument
 *The backend will start on `http://localhost:8088`. H2 database console is available at `/h2-console`.*
 
 ### 2. Running the Frontend
-Navigate to the `frontend` directory, install dependencies, and start the Vite dev server.
-
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*The frontend will start on `http://localhost:3003`.*
-
----
-
-## 🧪 Default Test Accounts
-The application automatically seeds the database with the following users on startup:
-
-| Role | Username | Password | Purpose |
-|------|----------|----------|---------|
-| **Admin** | `admin` | `Admin@1234` | Full access to Admin Panel, KYC, Loans, and Provisioning |
-| **Customer**| `testuser` | `Test@1234` | Standard user for testing transfers, deposits, and requests |
+*The frontend will start on `http://localhost:3000`.*
 
 ---
 
 ## 📐 Why This Project Stands Out (For Recruiters)
 
 * **Beyond CRUD**: Implements complex business logic like atomic multi-step transactions, soft-deletes, and asynchronous fraud detection.
-* **Security-First Mindset**: Demonstrates understanding of real-world vulnerabilities by implementing IP whitelists, RBAC, and pessimistic database locking (`@Lock(LockModeType.PESSIMISTIC_WRITE)`) to prevent race conditions during money transfers.
+* **Security-First Mindset**: Demonstrates real-world security practices including IP whitelisting, RBAC, and pessimistic database locking (`@Lock(LockModeType.PESSIMISTIC_WRITE)`) to prevent race conditions during money transfers.
 * **Modern Tooling**: Utilizes `React Query` over standard `useEffect` for data fetching, showcasing knowledge of modern frontend performance optimizations and caching strategies.
-* **Production-Ready Code**: Features global exception handlers, standardized API responses, environment-based configurations (`application-dev.yml`), and strict TypeScript typing.
+* **Production-Ready CI/CD**: Fully automated multi-stage GitHub Actions pipeline (`.github/workflows/ci-cd.yml`) with Docker containerization, Vercel frontend hosting, and Render backend deployment.
 
 ---
 *Designed & Developed by Madan C S*
