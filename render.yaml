@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: securebank-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: singapore
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: dev
+      - key: PORT
+        value: 8088

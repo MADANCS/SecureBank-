@@ -9,7 +9,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   # ─── 1. BACKEND CI ────────────────────────────────────────────────────────
@@ -116,14 +116,17 @@ jobs:
       - name: Validate Docker Compose Configuration
         run: docker compose config
 
-  # ─── 4. CONTINUOUS DEPLOYMENT STAGE ───────────────────────────────────────
-  deploy-staging:
-    name: CD Release Readiness & Artifact Bundling
+  # ─── 4. CONTINUOUS DEPLOYMENT STAGE (VERCEL & RENDER) ────────────────────
+  deploy-production:
+    name: Deploy Frontend (Vercel) & Backend (Render)
     runs-on: ubuntu-latest
     needs: [backend-ci, frontend-ci, docker-ci]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Download Backend Artifact
         uses: actions/download-artifact@v4
         with:
@@ -136,14 +139,31 @@ jobs:
           name: securebank-frontend-dist
           path: deploy/frontend
 
-      - name: Summary Report
+      - name: Deploy Backend to Render (via Deploy Hook)
+        if: env.RENDER_DEPLOY_HOOK_URL != ''
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          echo "Triggering Render Backend Deployment Hook..."
+          curl -X POST "$RENDER_DEPLOY_HOOK_URL"
+
+      - name: Deploy Frontend to Vercel
+        if: env.VERCEL_TOKEN != ''
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          npx vercel --token $VERCEL_TOKEN --prod --yes
+
+      - name: Deployment Summary Report
         run: |
           echo "=================================================="
-          echo "🚀 SECUREBANK CI/CD PIPELINE PASSED SUCCESSFULLY"
+          echo "🚀 SECUREBANK CI/CD DEPLOYMENT PIPELINE PASSED"
           echo "=================================================="
           echo "Repository: ${{ github.repository }}"
           echo "Branch: ${{ github.ref }}"
           echo "Commit SHA: ${{ github.sha }}"
-          echo "Backend JAR: $(ls -l deploy/backend)"
-          echo "Frontend Dist: $(ls -l deploy/frontend)"
-          echo "All builds, tests, and container checks completed with 0 errors!"
+          echo "Frontend Ready for Vercel Deployment!"
+          echo "Backend Ready for Render Deployment!"
+          echo "All builds, tests, typechecks, and container checks completed successfully!"
