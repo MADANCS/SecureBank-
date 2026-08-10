@@ -23,4 +23,5 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080 8088 10000
 
-ENTRYPOINT ["sh", "-c", "exec java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${PORT:-8080} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-dev} -jar app.jar"]
+# Optimize JVM RAM limits for 512MB Render free tier to prevent Exit Status 137 (OOM)
+ENTRYPOINT ["sh", "-c", "exec java -Xms128m -Xmx320m -XX:MaxMetaspaceSize=128m -XX:+UseG1GC -Djava.security.egd=file:/dev/./urandom -Dserver.port=${PORT:-8080} -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-dev} -jar app.jar"]
