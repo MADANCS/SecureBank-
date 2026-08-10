@@ -72,6 +72,10 @@ public class TransactionService {
         Account from = accountRepository.findByAccountNumber(request.getFromAccount())
             .orElseThrow(() -> new IllegalArgumentException("Source account not found"));
 
+        if (!from.isActive()) {
+            throw new IllegalStateException("Source account " + from.getAccountNumber() + " is frozen. Please contact an administrator to unfreeze your account.");
+        }
+
         // ── FRAUD PRE-CHECK ──────────────────────────────────────────────────────
         Transaction candidate = new Transaction();
         candidate.setFromAccount(request.getFromAccount());
@@ -100,7 +104,7 @@ public class TransactionService {
                 "system", "FraudDetectionService", UUID.randomUUID().toString()
             ));
 
-            return blocked;
+            throw new IllegalArgumentException("🚨 FRAUD DETECTED: " + fraudReason.get() + " Your account has been temporarily frozen.");
         }
 
         // ── SPENDING LIMITS ──────────────────────────────────────────────────────

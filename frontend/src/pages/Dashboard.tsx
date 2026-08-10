@@ -192,9 +192,12 @@ export default function Dashboard() {
                 const dateStr = (tx as any).createdAt ?? tx.timestamp;
                 const date = dateStr ? new Date(dateStr) : null;
                 const isValid = date && !isNaN(date.getTime());
-                const isCredit = tx.type === 'CREDIT';
-                const isCompleted = tx.status === 'COMPLETED' || tx.status === 'SUCCESS';
-                const isFailed = tx.status === 'FAILED';
+                const userAccountNums = accounts.map(a => a.accountNumber);
+                const fromAccUpper = (tx.fromAccount || '').toUpperCase();
+                const isCreditSource = ['BANK_LOAN_DISBURSEMENT', 'DEPOSIT', 'REFUND', 'SYSTEM_CREDIT', 'INTEREST_CREDIT', 'RAZORPAY', 'STRIPE'].some(src => fromAccUpper.includes(src));
+                const isCredit = tx.type === 'CREDIT' || isCreditSource || (userAccountNums.length > 0 && userAccountNums.includes(tx.toAccount) && !userAccountNums.includes(tx.fromAccount));
+                const isCompleted = tx.status === 'COMPLETED' || tx.status === 'SUCCESS' || tx.status === 'DISBURSED' || tx.status === 'EMI_PAID';
+                const isFailed = tx.status === 'FAILED' || tx.status === 'REJECTED' || tx.status === 'BLOCKED';
                 const description = tx.description || `${tx.fromAccount} → ${tx.toAccount}`;
 
                 return (

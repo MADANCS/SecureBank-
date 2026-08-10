@@ -221,6 +221,26 @@ export default function Admin() {
     }
   };
 
+  const handleUnfreezeAccount = async (accountNumber: string) => {
+    try {
+      await instance.post(`/v1/admin/accounts/${accountNumber}/unfreeze`);
+      qc.invalidateQueries({ queryKey: ['adminUsers'] });
+      notify(`Account ${accountNumber} unfrozen successfully!`, true);
+    } catch (e: any) {
+      notify(e?.response?.data?.message ?? 'Failed to unfreeze account', false);
+    }
+  };
+
+  const handleFreezeAccount = async (accountNumber: string) => {
+    try {
+      await instance.post(`/v1/admin/accounts/${accountNumber}/freeze?reason=ADMIN_MANUAL`);
+      qc.invalidateQueries({ queryKey: ['adminUsers'] });
+      notify(`Account ${accountNumber} frozen successfully!`, true);
+    } catch (e: any) {
+      notify(e?.response?.data?.message ?? 'Failed to freeze account', false);
+    }
+  };
+
   // Non-admin users that have at least one account
   const depositableAccounts = users
     .filter(u => u.role !== 'ROLE_ADMIN' && u.accounts && u.accounts.length > 0)
@@ -398,13 +418,22 @@ export default function Admin() {
                         <td className="px-5 py-3 font-mono text-xs text-slate-600">
                           {user.accounts && user.accounts.length > 0
                             ? user.accounts.map(acc => (
-                              <div key={acc} className="flex items-center gap-2 group">
+                              <div key={acc} className="flex items-center gap-2 my-1">
                                 <span>{acc}</span>
                                 <button
-                                  onClick={() => { setDepAcc(acc); setTab('accounts'); notify(`Selected ${acc}`, true); }}
-                                  className="opacity-0 group-hover:opacity-100 text-emerald-600 text-xs underline transition-opacity"
-                                  title="Use for deposit"
-                                >use</button>
+                                  onClick={() => handleUnfreezeAccount(acc)}
+                                  className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[11px] font-semibold hover:bg-emerald-200 transition"
+                                  title="Unfreeze Account"
+                                >
+                                  🔓 Unfreeze
+                                </button>
+                                <button
+                                  onClick={() => handleFreezeAccount(acc)}
+                                  className="px-2 py-0.5 rounded bg-red-100 text-red-700 text-[11px] font-semibold hover:bg-red-200 transition"
+                                  title="Freeze Account"
+                                >
+                                  🔒 Freeze
+                                </button>
                               </div>
                             ))
                             : <span className="text-slate-400 italic">No accounts</span>

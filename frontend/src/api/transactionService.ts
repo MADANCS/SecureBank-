@@ -13,6 +13,9 @@ export const transactionService = {
         return { content: [], totalElements: 0, totalPages: 0, currentPage: 0, pageSize, hasNext: false, hasPrevious: false };
       }
       
+      const userAccountNums = accounts.map((a: any) => a.accountNumber);
+      const creditSources = ['BANK_LOAN_DISBURSEMENT', 'DEPOSIT', 'REFUND', 'SYSTEM_CREDIT', 'INTEREST_CREDIT', 'RAZORPAY', 'STRIPE'];
+
       let allTx: Transaction[] = [];
       for (const acc of accounts) {
         const response = await instance.get('/transactions', {
@@ -23,6 +26,17 @@ export const transactionService = {
       }
       
       allTx = Array.from(new Map(allTx.map(t => [t.id, t])).values());
+
+      allTx.forEach(t => {
+        const fromAccUpper = (t.fromAccount || '').toUpperCase();
+        const isCreditSource = creditSources.some(src => fromAccUpper.includes(src));
+        if (t.type === 'CREDIT' || isCreditSource || (userAccountNums.includes(t.toAccount) && !userAccountNums.includes(t.fromAccount))) {
+          t.type = 'CREDIT';
+        } else {
+          t.type = 'DEBIT';
+        }
+      });
+
       allTx.sort((a: any, b: any) => new Date(b.createdAt ?? b.timestamp).getTime() - new Date(a.createdAt ?? a.timestamp).getTime());
       
       const startIndex = (page - 1) * pageSize;
@@ -102,6 +116,9 @@ export const transactionService = {
       const accounts = accountsResp.data;
       if (!accounts || accounts.length === 0) return [];
 
+      const userAccountNums = accounts.map((a: any) => a.accountNumber);
+      const creditSources = ['BANK_LOAN_DISBURSEMENT', 'DEPOSIT', 'REFUND', 'SYSTEM_CREDIT', 'INTEREST_CREDIT', 'RAZORPAY', 'STRIPE'];
+
       let allTx: Transaction[] = [];
       for (const acc of accounts) {
         const response = await instance.get('/transactions', {
@@ -112,6 +129,17 @@ export const transactionService = {
       }
 
       allTx = Array.from(new Map(allTx.map(t => [t.id, t])).values());
+
+      allTx.forEach(t => {
+        const fromAccUpper = (t.fromAccount || '').toUpperCase();
+        const isCreditSource = creditSources.some(src => fromAccUpper.includes(src));
+        if (t.type === 'CREDIT' || isCreditSource || (userAccountNums.includes(t.toAccount) && !userAccountNums.includes(t.fromAccount))) {
+          t.type = 'CREDIT';
+        } else {
+          t.type = 'DEBIT';
+        }
+      });
+
       allTx.sort((a: any, b: any) => new Date(b.createdAt ?? b.timestamp).getTime() - new Date(a.createdAt ?? a.timestamp).getTime());
 
       return allTx.slice(0, limit);

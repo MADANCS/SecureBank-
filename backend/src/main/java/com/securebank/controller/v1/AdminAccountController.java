@@ -23,7 +23,7 @@ public class AdminAccountController {
     @PostMapping("/{accountNumber}/freeze")
     public ResponseEntity<String> freezeAccount(
             @PathVariable("accountNumber") String accountNumber,
-            @RequestParam("reason") String reason,
+            @RequestParam(value = "reason", defaultValue = "ADMIN_MANUAL") String reason,
             @AuthenticationPrincipal String admin,
             HttpServletRequest request) {
         accountFreezeService.freezeAccount(accountNumber, admin, reason);

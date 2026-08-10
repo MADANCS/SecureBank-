@@ -16,7 +16,8 @@ const CATEGORIES = ['FOOD', 'RENT', 'SALARY', 'EMI', 'UTILITIES', 'ENTERTAINMENT
 // ─── Status Timeline ─────────────────────────────────────────────────────────
 function StatusTimeline({ status }: { status: string | null }) {
   const steps = ['PENDING', 'PROCESSING', 'COMPLETED'];
-  const isFailed = status === 'FAILED';
+  const isFraud = status === 'BLOCKED_FRAUD';
+  const isFailed = status === 'FAILED' || isFraud;
   return (
     <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
       <p className="mb-4 text-sm font-semibold text-slate-600 uppercase tracking-wide">Transfer Progress</p>
@@ -27,14 +28,15 @@ function StatusTimeline({ status }: { status: string | null }) {
           return (
             <div key={step} className="flex flex-1 flex-col items-center">
               <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 text-sm font-bold transition-all duration-500
-                ${isFailed ? 'border-red-300 bg-red-100 text-red-500'
+                ${isFraud ? 'border-red-500 bg-red-600 text-white'
+                  : isFailed ? 'border-red-300 bg-red-100 text-red-500'
                   : status === 'COMPLETED' ? 'border-green-500 bg-green-500 text-white'
                   : isActive ? 'border-blue-500 bg-blue-500 text-white animate-pulse'
                   : past ? 'border-blue-400 bg-blue-100 text-blue-600'
                   : 'border-slate-300 bg-white text-slate-400'}`}>
-                {status === 'COMPLETED' ? '✓' : i + 1}
+                {isFraud ? '🚨' : status === 'COMPLETED' ? '✓' : i + 1}
               </div>
-              <p className={`mt-2 text-xs font-medium ${isActive ? 'text-blue-600' : past || status === 'COMPLETED' ? 'text-slate-700' : 'text-slate-400'}`}>{step}</p>
+              <p className={`mt-2 text-xs font-medium ${isFraud ? 'text-red-600 font-bold' : isActive ? 'text-blue-600' : past || status === 'COMPLETED' ? 'text-slate-700' : 'text-slate-400'}`}>{isFraud ? 'BLOCKED' : step}</p>
               {i < steps.length - 1 && (
                 <div className={`absolute top-5 h-0.5 w-[calc(33%-2.5rem)]
                   ${past || status === 'COMPLETED' ? 'bg-blue-500' : 'bg-slate-200'}`}
@@ -44,7 +46,8 @@ function StatusTimeline({ status }: { status: string | null }) {
           );
         })}
       </div>
-      {isFailed && <p className="mt-4 text-center text-sm font-medium text-red-600">❌ Transfer failed. Funds have not been debited.</p>}
+      {isFraud && <p className="mt-4 text-center text-sm font-semibold text-red-600">🚨 Transaction blocked by Fraud Detection Engine. Account temporarily frozen.</p>}
+      {isFailed && !isFraud && <p className="mt-4 text-center text-sm font-medium text-red-600">❌ Transfer failed. Funds have not been debited.</p>}
     </div>
   );
 }
@@ -94,12 +97,15 @@ export default function Transfer() {
     queryFn: () => accountService.getAccounts(),
   });
 
-  // Sync first account into form once loaded
+  // Sync first valid account into form once loaded
   useEffect(() => {
-    if (accounts.length > 0 && !form.fromAccount) {
-      setForm(f => ({ ...f, fromAccount: accounts[0].accountNumber }));
+    if (accounts.length > 0) {
+      const valid = accounts.some(a => a.accountNumber === form.fromAccount);
+      if (!form.fromAccount || !valid) {
+        setForm(f => ({ ...f, fromAccount: accounts[0].accountNumber }));
+      }
     }
-  }, [accounts.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [accounts]);
 
   const { status: txStatus, polling } = useTransactionStatus(pendingTxId);
   const isComplete = txStatus === 'COMPLETED';
