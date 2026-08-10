@@ -38,7 +38,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(Arrays.asList(allowedOrigins.split(",")));
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        corsConfiguration.setAllowedOriginPatterns(List.of("*"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
@@ -50,7 +51,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsSource))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/**", "/api/payments/razorpay/webhook", "/api/payments/stripe/webhook", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/", "/health", "/api/health", "/api/auth/**", "/api/payments/razorpay/webhook", "/api/payments/stripe/webhook", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/api/admin/**", "/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/teller/**").hasAnyRole("BANK_TELLER", "ADMIN")
                 .anyRequest().authenticated()
