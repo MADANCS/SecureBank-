@@ -18,7 +18,7 @@
 
 ## 🌐 Live Production Demo
 
-- **Frontend Application (Vercel)**: [https://secure-bank-mazz-git-main-madan21.vercel.app/signin](https://secure-bank-mazz-git-main-madan21.vercel.app/signin)
+- **Frontend Application (Vercel)**: [https://secure-bank-chi.vercel.app/]
 - **Backend Service (Render)**: [https://securebank-c41z.onrender.com/](https://securebank-c41z.onrender.com/)
 
 > ℹ️ **Note on First Access**: Render free tier instances spin down after inactivity. The first API request may take ~30–45 seconds to perform a cold start. Subsequent requests respond instantly (<100ms).
